@@ -1,7 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
+import userAccountRouter from "./Routes/LoginSignupRoutes";
 
 const app = express();
+app.use("/", userAccountRouter)
 
 mongoose.set("strictQuery", false);
 mongoose
