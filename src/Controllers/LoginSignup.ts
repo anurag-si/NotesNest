@@ -1,22 +1,54 @@
 import express from "express";
 import User from "../Models/User";
 import bcrypt from "bcrypt";
-// import user from "../Interface/LoginSignup.interface";
+import UserInterface from "../Interfaces/LoginSignup.interface";
 
-export const signUp = async (req: any, res: any, next: any) => {
-  const { username, email, password, notes } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 10);
-
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ message: "User Already Exists!" });
+export const signUp = async (req: UserInterface, res: any, next: any) => {
+  const { username, email, password } = req.body;
+  //verify if username or email exists
+  const existingEmail = await User.findOne({ email });
+  const existingUsername = await User.findOne({ username });
+  if (existingEmail) {
+    return res.status(400).json({ message: "Email Already Exists!" });
+  }
+  if (existingUsername) {
+    return res.status(400).json({ message: "Username Already Exists!" });
   }
 
-  const newUser = new User({
-    username,
-    email,
-    hashedPassword,
-  });
+  //hash the password
+  async function hashPassword(password: string): Promise<string> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    return hashedPassword;
+  }
 
-  newUser.save();
+  //create new user
+  hashPassword(password)
+    .then((hashedPassword: any) => {
+      const newUser = new User({
+        username,
+        email,
+        password: hashedPassword,
+      });
+
+      newUser
+        .save()
+        .then((result) => {
+          res.status(201).send({
+            message: "Registration Successful",
+            result,
+          });
+        })
+        .catch((error) => {
+          res.status(500).send({
+            message: "User not created",
+            error,
+          });
+        });
+    })
+    .catch((error: any) => {
+      res.status(500).send({
+        message: "Password not hashed",
+        error,
+      });
+    });
 };

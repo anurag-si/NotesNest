@@ -1,3 +1,7 @@
-export default interface user {
-    body: { username: string; email: string; password: string; notes: any };
-  }
+export default interface UserInterface {
+  body: {
+    username: string;
+    email: string;
+    password: string;
+  };
+}

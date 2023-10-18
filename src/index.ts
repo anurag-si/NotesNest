@@ -2,8 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import userAccountRouter from "./Routes/LoginSignupRoutes";
 
+
 const app = express();
-app.use("/", userAccountRouter)
+app.use(express.json())
+app.use("/notesnest", userAccountRouter)
 
 mongoose.set("strictQuery", false);
 mongoose
@@ -13,5 +15,3 @@ mongoose
   .then(() => app.listen(4000))
   .then(() => console.log("Connected to DB"))
   .catch((err: any) => console.log(err));
-
-console.log("Hello");
