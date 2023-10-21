@@ -1,4 +1,4 @@
-export interface UserInterface {
+export interface IUserSignup {
   body: {
     username: string;
     email: string;
@@ -6,9 +6,13 @@ export interface UserInterface {
   };
 }
 
-export interface LoginUserInterface {
+export interface IUserLogin {
   body: {
     userId: string;
     password: string;
   };
+}
+
+export interface IResponse {
+  message: string;
 }
