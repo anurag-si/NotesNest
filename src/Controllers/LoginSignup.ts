@@ -2,8 +2,12 @@ import express from "express";
 import User from "../Models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import UserInterface from "../Interfaces/LoginSignup.interface";
-import { createToken, storeToken } from "../Utilities/jwtToken";
+import {
+  UserInterface,
+  LoginUserInterface,
+} from "../Interfaces/LoginSignup.interface";
+import { storeToken } from "../Utilities/jwtToken";
+import { ValidateEmail } from "../Utilities/regex";
 
 export const signUp = async (
   req: UserInterface,
@@ -58,14 +62,25 @@ export const signUp = async (
     });
 };
 
-export const login = async (req: UserInterface, res: any, next: any):Promise<void> => {
-  const { username, email, password } = req.body;
-  const existingEmail = await User.findOne({ email });
-  const existingUsername = await User.findOne({ username });
+export const login = async (
+  req: LoginUserInterface,
+  res: any,
+  next: any
+): Promise<void> => {
+  const { userId, password } = req.body;
 
-  if (!existingEmail || !existingUsername) {
-    return res.status(400).json({ message: "Email or Username not found" });
+  if (ValidateEmail(userId)) {
+    const existingEmail = await User.findOne({ email: userId });
+    if (!existingEmail) {
+      return res.status(400).json({ message: "Email or Username not found" });
+    }
+  } else {
+    const existingUsername = await User.findOne({ username: userId });
+    if (!existingUsername) {
+      return res.status(400).json({ message: "Email or Username not found" });
+    }
   }
-  storeToken(email,res)
+
+  storeToken(userId, res);
   return res.status(200).json({ message: "Login Success" });
 };
