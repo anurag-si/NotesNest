@@ -56,7 +56,7 @@ export const signUp = async (
         });
       });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(500).send({
       message: "Internal Server Error",
     });
   }

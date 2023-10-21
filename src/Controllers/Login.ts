@@ -48,7 +48,7 @@ export const login = async (
         });
     }
   } catch (error: any) {
-    res.status(400).send({
+    res.status(500).send({
       message: "Internal Server Error",
     });
   }
