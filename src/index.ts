@@ -1,9 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import userAccountRouter from "./Routes/LoginSignupRoutes";
+import cookieParser from "cookie-parser"
+require('dotenv').config();
 
 
 const app = express();
+app.use(cookieParser())
 app.use(express.json())
 app.use("/notesnest", userAccountRouter)
 

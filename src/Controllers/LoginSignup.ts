@@ -1,11 +1,17 @@
 import express from "express";
 import User from "../Models/User";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import UserInterface from "../Interfaces/LoginSignup.interface";
+import { createToken, storeToken } from "../Utilities/jwtToken";
 
-export const signUp = async (req: UserInterface, res: any, next: any) => {
+export const signUp = async (
+  req: UserInterface,
+  res: any,
+  next: any
+): Promise<void> => {
   const { username, email, password } = req.body;
-  //verify if username or email exists
+
   const existingEmail = await User.findOne({ email });
   const existingUsername = await User.findOne({ username });
   if (existingEmail) {
@@ -15,13 +21,11 @@ export const signUp = async (req: UserInterface, res: any, next: any) => {
     return res.status(400).json({ message: "Username Already Exists!" });
   }
 
-  //hash the password
   async function hashPassword(password: string): Promise<string> {
     const hashedPassword = await bcrypt.hash(password, 10);
     return hashedPassword;
   }
 
-  //create new user
   hashPassword(password)
     .then((hashedPassword: any) => {
       const newUser = new User({
@@ -33,6 +37,7 @@ export const signUp = async (req: UserInterface, res: any, next: any) => {
       newUser
         .save()
         .then((result) => {
+          storeToken(email, res);
           res.status(201).send({
             message: "Registration Successful",
             result,
@@ -51,4 +56,16 @@ export const signUp = async (req: UserInterface, res: any, next: any) => {
         error,
       });
     });
+};
+
+export const login = async (req: UserInterface, res: any, next: any):Promise<void> => {
+  const { username, email, password } = req.body;
+  const existingEmail = await User.findOne({ email });
+  const existingUsername = await User.findOne({ username });
+
+  if (!existingEmail || !existingUsername) {
+    return res.status(400).json({ message: "Email or Username not found" });
+  }
+  storeToken(email,res)
+  return res.status(200).json({ message: "Login Success" });
 };
