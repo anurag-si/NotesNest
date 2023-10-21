@@ -5,14 +5,15 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-export const createToken = (email: string): string => {
+export const createToken = (userId: string): string => {
   const secretKey = process.env.JWTSECRETKEY as Secret;
-  const token: string = jwt.sign({ email }, secretKey);
+  const token: string = jwt.sign({ userId }, secretKey);
   return token;
 };
 
-export const storeToken = (email: any, res: any, next?: any) => {
-  const tokenGenerated = createToken(email);
+export const storeToken = (userId: any, res: any, next?: any) => {
+  const tokenGenerated = createToken(userId);
+  console.log(tokenGenerated, "token")
   return res.cookie("authcookie", tokenGenerated, {
     maxAge: 900000,
     httpOnly: true,
