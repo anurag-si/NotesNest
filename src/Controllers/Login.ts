@@ -1,6 +1,6 @@
 import express from "express";
 import User from "../Models/User";
-import { IResponse, IUserLogin } from "../Interfaces/User.interface";
+import { IResponse, IUserLogin } from "../domain/entities/User.interface";
 import { passwordVerification, generateToken } from "../Utilities/jwtToken";
 import { ValidateEmail } from "../Utilities/regex";
 
@@ -22,6 +22,7 @@ export const login = async (
 
       passwordVerification(password, existingEmail.password)
         .then(() => {
+          console.log(res, "res");
           generateToken(userId, res);
           res.status(200).json({ message: "Login Success" });
         })

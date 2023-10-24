@@ -12,8 +12,9 @@ export const generateToken = async (userId: any, res: any, next?: any) => {
     process.env.JWT_SECRET_KEY as Secret
   );
   return res.cookie("authcookie", tokenGenerated, {
-    maxAge: 10000,
+    maxAge: 86400000,
     httpOnly: true,
+    secure: true,
   });
 };
 
@@ -22,5 +23,10 @@ export const passwordVerification = async (
   savedPassword: string
 ): Promise<boolean> => {
   const isPasswordCorrect = bcrypt.compareSync(password, savedPassword);
-  return isPasswordCorrect;
+
+  if (isPasswordCorrect) {
+    return isPasswordCorrect;
+  } else {
+    throw new Error("Incorrect Password");
+  }
 };
