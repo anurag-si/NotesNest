@@ -1,8 +1,8 @@
 import express from "express";
-import User from "../Models/User";
-import { IResponse, IUserLogin } from "../domain/entities/User.interface";
-import { passwordVerification, generateToken } from "../Utilities/jwtToken";
-import { ValidateEmail } from "../Utilities/regex";
+import User from "../../Models/User";
+import { IResponse, IUserLogin } from "../../Interfaces/User.interface";
+import { passwordVerification, generateToken } from "../../Utilities/jwtToken";
+import { ValidateEmail } from "../../Utilities/regex";
 
 export const login = async (
   req: IUserLogin,

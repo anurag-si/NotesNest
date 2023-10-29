@@ -1,8 +1,8 @@
 import express from "express";
-import User from "../Models/User";
+import User from "../../Models/User";
 import bcrypt from "bcrypt";
-import { IResponse, IUserSignup } from "../domain/entities/User.interface";
-import { generateToken } from "../Utilities/jwtToken";
+import { IResponse, IUserSignup } from "../../Interfaces/User.interface";
+import { generateToken } from "../../Utilities/jwtToken";
 
 export const signUp = async (
   req: IUserSignup,
