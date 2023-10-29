@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const notesSchema = new Schema({
-  data: String
-})
+  data: String,
+});
 
 const userSchema = new Schema({
   username: {
@@ -13,15 +13,19 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: true, 
   },
   password: {
     type: String,
     required: true,
   },
-  notes: {
-    type: [notesSchema]
-  }
+  notes: [
+    {
+      _id: false, // This line tells Mongoose not to generate ObjectId for this subdocument
+      note: String,
+      // other fields in your notes subdocument
+    },
+  ],
 });
 
 export default module.exports = mongoose.model("User", userSchema);
