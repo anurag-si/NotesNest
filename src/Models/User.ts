@@ -13,7 +13,7 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true, 
+    required: true,
   },
   password: {
     type: String,
@@ -21,10 +21,16 @@ const userSchema = new Schema({
   },
   notes: [
     {
-      _id: false, // This line tells Mongoose not to generate ObjectId for this subdocument
-      note: String,
-      // other fields in your notes subdocument
+      id: {
+        type: String,
+      },
+      note: {
+        type: String,
+      },
     },
+    // This line tells Mongoose not to generate ObjectId for this subdocument
+
+    // other fields in your notes subdocument
   ],
 });
 
