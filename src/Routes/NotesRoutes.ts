@@ -8,8 +8,8 @@ import { verifyToken } from "../Utilities/jwtToken"
 const notesRouter = express.Router()
 
 notesRouter.get("/get",verifyToken, readNote)
-notesRouter.post("/addNote",verifyToken, addNote)
+notesRouter.post("/addnote",verifyToken, addNote)
 // notesRouter.post("/update", updateNote)
-notesRouter.delete("/delete", deleteNote)
+notesRouter.delete("/delete",verifyToken, deleteNote)
 
 export default notesRouter;
