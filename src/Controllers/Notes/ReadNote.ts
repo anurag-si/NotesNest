@@ -8,7 +8,7 @@ export const readNote = async (req: any, res: any) => {
     const existingUser = await User.findOne({ username });
     
     if (existingUser) {
-      const notes = existingUser.notes;
+      const notes = existingUser.label;
       res.status(200).json({ message: "Notes", notes });
     } else {
       res.status(200).json({ message: "User not found" });
