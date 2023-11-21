@@ -26,9 +26,3 @@ export const addNote = async (req: any, res: any, next: any) => {
     });
   }
 };
-
-// {
-//   "username": "anuragnote",
-//   "email": "anuragnote@abc.com",
-//   "password": "123456"
-// }
