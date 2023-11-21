@@ -3,7 +3,7 @@ import User from "../../Models/User";
 import { ValidateEmail } from "../../Utilities/regex";
 
 export const addNote = async (req: any, res: any, next: any) => {
-  const { note } = req.body;
+  const { label } = req.body;
   const userId = await req.cookies.username;
 
   try {
@@ -14,7 +14,7 @@ export const addNote = async (req: any, res: any, next: any) => {
       existingUser = await User.findOne({ username: userId });
     }
     if (existingUser) {
-      existingUser.notes.push({ note });
+      existingUser.label.push(label);
       await existingUser.save();
       res.status(200).json({ message: "Note added successfully." });
     } else {
@@ -22,7 +22,7 @@ export const addNote = async (req: any, res: any, next: any) => {
     }
   } catch (err: any) {
     res.status(500).send({
-      message: "Internal Server Error",
+      message: err,
     });
   }
 };
