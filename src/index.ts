@@ -1,10 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import userAccountRouter from "./Routes/LoginSignupRoutes";
+import userRouter from "./Routes/UserRoutes";
 import cookieParser from "cookie-parser";
-import * as dotenv from "dotenv";
-import notesRouter from "./Routes/NotesRoutes";
 
 require("dotenv").config();
 
@@ -13,12 +11,11 @@ const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
-app.use("/notesnest", userAccountRouter);
-app.use("/notesnest", notesRouter)
+app.use("/notesnest", userRouter);
 
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGODB_URL as string)
   .then(() => app.listen(4000))
-  .then(() => console.log("Connected to DB"))
+  .then(() => console.log(`Connected to DB Listening on port number 4000 `))
   .catch((err: any) => console.log(err));
