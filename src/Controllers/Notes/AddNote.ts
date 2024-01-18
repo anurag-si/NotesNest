@@ -2,27 +2,34 @@ import express from "express";
 import User from "../../Models/User";
 import { ValidateEmail } from "../../Utilities/regex";
 
-export const addNote = async (req: any, res: any, next: any) => {
+interface RequestBody {
+  label: string;
+}
+
+export const addNote = async (req: any, res: any) => {
   const { label } = req.body;
   const userId = await req.cookies.username;
 
   try {
-    let existingUser;
-    if (ValidateEmail(userId)) {
-      existingUser = await User.findOne({ email: userId });
-    } else {
-      existingUser = await User.findOne({ username: userId });
-    }
+    const existingUser = await findUser(userId);
+
     if (existingUser) {
       existingUser.label.push(label);
       await existingUser.save();
       res.status(200).json({ message: "Note added successfully." });
     } else {
-      res.status(200).json({ message: "User not found" });
+      res.status(404).json({ message: "User not found" });
     }
-  } catch (err: any) {
-    res.status(500).send({
-      message: err,
-    });
+  } catch (err) {
+    console.error("Error adding note:", err);
+    res.status(500).send({ message: "Internal Server Error" });
   }
 };
+
+async function findUser(userId: string) {
+  if (ValidateEmail(userId)) {
+    return await User.findOne({ email: userId });
+  } else {
+    return await User.findOne({ username: userId });
+  }
+}

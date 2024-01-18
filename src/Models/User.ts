@@ -25,11 +25,7 @@ const labelSchema = new Schema({
     type: String,
   },
   notes: [notesSchema],
-  pinned_notes: [
-    {
-      type: notesSchema,
-    },
-  ],
+  pinned_notes: [notesSchema],
 });
 
 const userSchema = new Schema({

@@ -9,7 +9,7 @@ const notesRouter = express.Router()
 
 notesRouter.get("/get",verifyToken, readNote)
 notesRouter.post("/addnote",verifyToken, addNote)
-// notesRouter.post("/update", updateNote)
+notesRouter.post("/update", updateNote)
 notesRouter.delete("/delete",verifyToken, deleteNote)
 
 export default notesRouter;

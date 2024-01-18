@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import User from "../../Models/User";
 
 export const readNote = async (req: any, res: any) => {
@@ -6,16 +6,15 @@ export const readNote = async (req: any, res: any) => {
 
   try {
     const existingUser = await User.findOne({ username });
-    
+
     if (existingUser) {
       const notes = existingUser.label;
-      res.status(200).json({ message: "Notes", notes });
+      res.status(200).json({ message: "Notes retrieved successfully", notes });
     } else {
-      res.status(200).json({ message: "User not found" });
+      res.status(404).json({ message: "User not found" });
     }
-  } catch (err: any) {
-    res.status(500).send({
-      message: "Internal Server Error",
-    });
+  } catch (err) {
+    console.error("Error reading notes:", err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
