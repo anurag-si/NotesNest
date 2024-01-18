@@ -25,13 +25,12 @@ export const generateToken = async (userId: any, res: any, next?: any) => {
 
 export const verifyToken = async (req: any, res: any, next: any) => {
   const token = await req.cookies.authcookie;
-
+  
   if (!token) {
     return res
       .status(401)
       .json({ message: "Access denied. Token is missing." });
   }
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as Secret);
     req.user = decoded; // Store the user information in the request

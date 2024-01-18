@@ -32,7 +32,6 @@ export const signUp = async (
           email,
           password: hashedPassword,
         });
-        console.log(newUser, "newUs");
         newUser
           .save()
           .then((result) => {

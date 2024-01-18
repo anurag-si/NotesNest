@@ -14,7 +14,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/notesnest", userAccountRouter);
-app.use("/notesnest", notesRouter)
+app.use("/notesnest", notesRouter);
 
 mongoose.set("strictQuery", false);
 mongoose
