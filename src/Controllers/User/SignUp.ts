@@ -1,8 +1,7 @@
-import express from "express";
-import User from "../../Models/User";
+import User from "Models/User";
 import bcrypt from "bcrypt";
-import { IResponse, IUserSignup } from "../../Interfaces/User.interface";
-import { generateToken } from "../../Utilities/jwtToken";
+import { IUserSignup } from "Interfaces/User.interface";
+import TokenUtils from "Utilities/tokenUtils";
 
 export const signUp = async (
   req: IUserSignup,
@@ -35,7 +34,7 @@ export const signUp = async (
         newUser
           .save()
           .then((result) => {
-            generateToken(email, res);
+            TokenUtils.generateToken(email, res);
             res.status(201).send({
               message: "Registration Successful",
               result,

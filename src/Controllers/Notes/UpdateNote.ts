@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import User from "../../Models/User";
-import { ValidateEmail } from "../../Utilities/regex";
+import { Utils } from "Utilities/utils";
 
 interface UpdateNoteRequestBody {
   noteId: string;
@@ -16,7 +16,7 @@ export const updateNote = async (req: any, res: any) => {
 
     if (existingUser) {
       const noteIndex = existingUser.label.findIndex(
-        (note) => note?._id.toString() === noteId
+        (note) => note?._id?.toString() === noteId
       );
 
       if (noteIndex !== -1) {
@@ -36,7 +36,7 @@ export const updateNote = async (req: any, res: any) => {
 };
 
 async function findUser(userId: string) {
-  if (ValidateEmail(userId)) {
+  if (Utils.validateEmail(userId)) {
     return await User.findOne({ email: userId });
   } else {
     return await User.findOne({ username: userId });

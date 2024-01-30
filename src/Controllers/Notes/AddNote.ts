@@ -1,6 +1,6 @@
 import express from "express";
 import User from "../../Models/User";
-import { ValidateEmail } from "../../Utilities/regex";
+import { Utils } from "Utilities/utils";
 
 interface RequestBody {
   label: string;
@@ -27,7 +27,7 @@ export const addNote = async (req: any, res: any) => {
 };
 
 async function findUser(userId: string) {
-  if (ValidateEmail(userId)) {
+  if (Utils.validateEmail(userId)) {
     return await User.findOne({ email: userId });
   } else {
     return await User.findOne({ username: userId });
