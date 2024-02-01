@@ -1,7 +1,0 @@
-{
-  "extends": "tslint:recommended",
-  "rules": {
-    "class-name-pascal-case": true
-  },
-  "rulesDirectory": ["tslint-ext"]
-}

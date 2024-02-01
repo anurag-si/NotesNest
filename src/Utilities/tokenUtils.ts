@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 class TokenUtils {
-  static generateToken = async (userId: any, res: any, next?: any) => {
+  static generateToken = async (userId: string, res: any) => {
     const tokenGenerated: string = jwt.sign(
       { userId },
       process.env.JWT_SECRET_KEY as Secret

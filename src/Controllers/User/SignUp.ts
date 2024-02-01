@@ -1,12 +1,11 @@
-import User from "Models/User";
 import bcrypt from "bcrypt";
-import { IUserSignup } from "Interfaces/User.interface";
-import TokenUtils from "Utilities/tokenUtils";
+import TokenUtils from "../../Utilities/tokenUtils";
+import { IUserSignup } from "../../Interfaces/User.interface";
+import User from "../../Models/User";
 
-export const signUp = async (
+export const SignUp = async (
   req: IUserSignup,
   res: any,
-  next: any
 ): Promise<void> => {
   const { username, email, password } = req.body;
 
