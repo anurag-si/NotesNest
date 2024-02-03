@@ -2,11 +2,9 @@ import bcrypt from "bcrypt";
 import TokenUtils from "../../Utilities/tokenUtils";
 import { IUserSignup } from "../../Interfaces/User.interface";
 import User from "../../Models/User";
+import Label from "../../Models/Label";
 
-export const SignUp = async (
-  req: IUserSignup,
-  res: any,
-): Promise<void> => {
+export const SignUp = async (req: IUserSignup, res: any): Promise<void> => {
   const { username, email, password } = req.body;
 
   try {
@@ -29,11 +27,23 @@ export const SignUp = async (
           username,
           email,
           password: hashedPassword,
+          labels: [],
         });
         newUser
           .save()
           .then((result) => {
             TokenUtils.generateToken(email, res);
+            const defaultLabel = new Label({
+              label_name: "Notes",
+              label_type: "default",
+              pinned_notes: [], // Initialize pinned notes array
+              notes: [], // Initialize notes array
+            });
+            // Save the default label to the database
+            defaultLabel.save();
+            // Push the default label's ID into the user's labels array
+            newUser.labels.push(defaultLabel._id);
+            newUser.save();
             res.status(201).send({
               message: "Registration Successful",
               result,

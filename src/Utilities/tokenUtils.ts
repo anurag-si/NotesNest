@@ -2,8 +2,14 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Secret } from "jsonwebtoken";
 import * as dotenv from "dotenv";
+import { NextFunction, Response } from "express";
+import { IUserCookie, IUserRequest } from "../Interfaces/User.interface";
+import User from "../Models/User";
+import { Document } from "mongodb";
 
 dotenv.config();
+
+interface IUserDocument extends Document {}
 
 class TokenUtils {
   static generateToken = async (userId: string, res: any) => {
@@ -23,7 +29,11 @@ class TokenUtils {
     });
   };
 
-  static verifyToken = async (req: any, res: any, next: any) => {
+  static verifyToken = async (
+    req: IUserRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     const token = await req.cookies.authcookie;
 
     if (!token) {
@@ -35,7 +45,6 @@ class TokenUtils {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as Secret);
       req.user = decoded; // Store the user information in the request
-      console.log(req.user, "decoded");
       next();
     } catch (error) {
       res.status(400).json({ message: "Invalid token." });
@@ -52,6 +61,28 @@ class TokenUtils {
       return isPasswordCorrect;
     } else {
       throw new Error("Incorrect Password");
+    }
+  };
+
+  static getUserId = async (req: IUserCookie): Promise<IUserDocument> => {
+    const userEmail = req?.cookies?.username;
+
+    try {
+      if (userEmail) {
+        const user: IUserDocument | null = await User.findOne({
+          email: userEmail,
+        }).exec();
+
+        if (user) {
+          return user;
+        } else {
+          throw new Error("User not found");
+        }
+      } else {
+        throw new Error("Username not provided in cookies");
+      }
+    } catch (error) {
+      throw new Error("Could not find username " + error);
     }
   };
 }
