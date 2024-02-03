@@ -36,12 +36,10 @@ export const SignUp = async (req: IUserSignup, res: any): Promise<void> => {
             const defaultLabel = new Label({
               label_name: "Notes",
               label_type: "default",
-              pinned_notes: [], // Initialize pinned notes array
-              notes: [], // Initialize notes array
+              pinned_notes: [],
+              notes: [], 
             });
-            // Save the default label to the database
             defaultLabel.save();
-            // Push the default label's ID into the user's labels array
             newUser.labels.push(defaultLabel._id);
             newUser.save();
             res.status(201).send({
