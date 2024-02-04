@@ -1,3 +1,6 @@
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
+
 export interface IUserSignup {
   body: {
     username: string;
@@ -16,4 +19,13 @@ export interface IUserLogin {
 
 export interface IResponse {
   message: string;
+}
+
+export interface IUserRequest extends Request {
+  user: string | JwtPayload;
+}
+
+export interface IUserCookie extends Request {
+  username: string;
+  authcookie: string;
 }

@@ -1,14 +1,10 @@
-import express from "express";
-import User from "../../Models/User";
 import bcrypt from "bcrypt";
-import { IResponse, IUserSignup } from "../../Interfaces/User.interface";
-import { generateToken } from "../../Utilities/jwtToken";
+import TokenUtils from "../../Utilities/tokenUtils";
+import { IUserSignup } from "../../Interfaces/User.interface";
+import User from "../../Models/User";
+import Label from "../../Models/Label";
 
-export const signUp = async (
-  req: IUserSignup,
-  res: any,
-  next: any
-): Promise<void> => {
+export const SignUp = async (req: IUserSignup, res: any): Promise<void> => {
   const { username, email, password } = req.body;
 
   try {
@@ -31,11 +27,21 @@ export const signUp = async (
           username,
           email,
           password: hashedPassword,
+          labels: [],
         });
         newUser
           .save()
           .then((result) => {
-            generateToken(email, res);
+            TokenUtils.generateToken(email, res);
+            const defaultLabel = new Label({
+              label_name: "Notes",
+              label_type: "default",
+              pinned_notes: [],
+              notes: [], 
+            });
+            defaultLabel.save();
+            newUser.labels.push(defaultLabel._id);
+            newUser.save();
             res.status(201).send({
               message: "Registration Successful",
               result,

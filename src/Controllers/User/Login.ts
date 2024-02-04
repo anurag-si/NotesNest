@@ -1,34 +1,28 @@
-import express from "express";
 import User from "../../Models/User";
-import { IResponse, IUserLogin } from "../../Interfaces/User.interface";
-import { passwordVerification, generateToken } from "../../Utilities/jwtToken";
-import { ValidateEmail } from "../../Utilities/regex";
+import { IUserLogin } from "../../Interfaces/User.interface";
+import TokenUtils from "../../Utilities/tokenUtils";
+import { Utils } from "../../Utilities/utils";
 
-export const login = async (
-  req: IUserLogin,
-  res: any,
-  next: any
-): Promise<void> => {
+export const Login = async (req: IUserLogin, res: any): Promise<void> => {
   const { userId, password } = req.body;
 
   try {
-    //Check if Email entered or Username
-    if (ValidateEmail(userId)) {
+    if (Utils.validateEmail(userId)) {
       const existingEmail = await User.findOne({ email: userId });
 
       if (!existingEmail) {
         return res.status(404).json({ message: "Email not found" });
       }
 
-      passwordVerification(password, existingEmail.password)
+      TokenUtils.passwordVerification(password, existingEmail.password)
         .then(() => {
-          console.log(res, "res");
-          generateToken(userId, res);
+          TokenUtils.generateToken(userId, res);
           res.status(200).json({ message: "Login Success" });
         })
         .catch((error) => {
           res.status(401).send({
             message: "Password Incorrect",
+            error,
           });
         });
     } else {
@@ -37,14 +31,15 @@ export const login = async (
         return res.status(404).json({ message: "Username not found" });
       }
 
-      passwordVerification(password, existingUsername.password)
+      TokenUtils.passwordVerification(password, existingUsername.password)
         .then(() => {
-          generateToken(userId, res);
+          TokenUtils.generateToken(userId, res);
           res.status(200).json({ message: "Login Success" });
         })
         .catch((error) => {
           res.status(401).send({
             message: "Password Incorrect",
+            error,
           });
         });
     }
