@@ -5,6 +5,7 @@ import userAccountRouter from "./Routes/User.routes";
 import labelRoutes from "./Routes/Label.routes";
 import cookieParser from "cookie-parser";
 import homeRoutes from "./Routes/Home.routes";
+import noteRoutes from "./Routes/Note.routes";
 
 require("dotenv").config();
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/auth", userAccountRouter);
 app.use("/label", labelRoutes);
+app.use("/note", noteRoutes);
 app.use("/", homeRoutes);
 
 mongoose.set("strictQuery", false);

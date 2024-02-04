@@ -10,10 +10,10 @@ const notesSchema = new Schema({
     type: String,
   },
   date_of_creation: {
-    type: String,
+    type: Number,
   },
   date_of_updation: {
-    type: String,
+    type: Number,
   },
 });
 

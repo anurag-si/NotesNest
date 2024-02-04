@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import { NextFunction, Response } from "express";
 import { IUserCookie, IUserRequest } from "../Interfaces/User.interface";
 import User from "../Models/User";
+import Label from "../Models/Label";
 import { Document } from "mongodb";
 
 dotenv.config();
@@ -83,6 +84,26 @@ class TokenUtils {
       }
     } catch (error) {
       throw new Error("Could not find username " + error);
+    }
+  };
+
+  static getLabel = async (id: string): Promise<IUserDocument> => {
+    const labelId = id;
+
+    try {
+      if (labelId) {
+        const label = await Label.findById(labelId).exec();
+
+        if (label) {
+          return label;
+        } else {
+          throw new Error("Label not found");
+        }
+      } else {
+        throw new Error("Label ID not provided");
+      }
+    } catch (error) {
+      throw new Error("Could not find Label " + error);
     }
   };
 }

@@ -55,7 +55,10 @@ export const getLabels = async (req: IUserCookie, res: Response) => {
     const userResponse = await TokenUtils.getUserId(req);
     const userId = userResponse._id;
     console.log("usersid", userId);
-    const user = await User.findById(userId).populate("labels");
+    const user = await User.findById(userId).populate({
+      path: "labels",
+      populate: { path: "notes" },
+    });
     if (!user) {
       return res.status(404).send("User not found");
     }
